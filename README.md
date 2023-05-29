@@ -25,7 +25,22 @@ php artisan vendor:publish --provider="Yormy\CiphersweetExtLaravel\AnonymizerSer
 # Spatie instructions
 https://github.com/spatie/laravel-ciphersweet
 
-# 
+# Additional functionality
+- Encrypt all models (scan currrent app directory and add custom models in config) (php artisan db:encrypt --key=)
+- Add wrapper around key generation to stay consistent in namespace (db:encrypt-generate-key)
+- Create blind index on First X Characters
+
+```
+Creating a index on the first could of characters.
+
+Use case:
+Search database based on a supplied first part of a Name or email address. For example be able to type in freek to search for all email addresses in the database that start with freek
+
+Usage:
+->addBlindIndex('email', new BlindIndex('email_index_f5', [new FirstXCharacters(5)]));
+
+The f5 in the index is just my naming convention to show that this index is based on the First 5 characters
+```
 
 
 ## Changelog
