@@ -14,7 +14,7 @@ use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class DecryptRecordCommand extends Command
 {
-    protected $signature = 'db:decrypt-record {model} {decryptKey?} {sortDirection=asc}';
+    protected $signature = 'db:decrypt-record {model} {decryptKey?}';
 
     protected $description = 'Encrypt the values of a model';
 
@@ -38,15 +38,8 @@ class DecryptRecordCommand extends Command
         }
 
         return config('ciphersweet.providers.string.key');
-
-//        'providers' => [
-//        'file' => [
-//            'path' => env('CIPHERSWEET_FILE_PATH'),
-//        ],
-//        'string' => [
-//            'key' => env('CIPHERSWEET_KEY'),
-//        ],
     }
+
     protected function ensureValidInput(): bool
     {
         /** @var class-string<\Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted> $modelClass */
@@ -76,16 +69,13 @@ class DecryptRecordCommand extends Command
      */
     protected function decryptModelValues(string $modelClass): void
     {
-        $updatedRows = 0;
-
-        $sortDirection = $this->argument('sortDirection');
-
         $table = 'admins';
         $id = 2;
         DB::table($table)
             ->where('id', 2)
             ->orderBy((new $modelClass())
-                ->getKeyName(), $sortDirection)
+            ->getKeyName()
+            )
             ->each(function (object $model) use ($modelClass, $table, &$updatedRows) {
                 $model = (array)$model;
 
