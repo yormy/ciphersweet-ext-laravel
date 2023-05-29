@@ -43,6 +43,11 @@ class EncryptDbCommand extends Command
      */
     public function handle(Dispatcher $events)
     {
+        if (empty($encryptionKey = $this->option('key'))) {
+            $this->components->error('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
+            // die();
+        }
+
         $this->startTime = microtime(true);
 
         $models = $this->getAllModels();
@@ -91,10 +96,7 @@ class EncryptDbCommand extends Command
     {
         $startTime = microtime(true);
 
-        if (empty($encryptionKey = $this->option('key'))) {
-            $this->components->info('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
-            // die();
-        }
+        $encryptionKey = $this->option('key');
         $encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
 
         try {
@@ -165,7 +167,7 @@ class EncryptDbCommand extends Command
         /**
          * @var string[] $ignorePaths
          */
-        $ignorePaths = config('anonymizer.ignore');
+        $ignorePaths = config('ciphersweet-ext.ignore');
 
         if (Str::startsWith($model, $ignorePaths)) {
             return false;
