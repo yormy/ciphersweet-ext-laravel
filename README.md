@@ -42,6 +42,24 @@ Usage:
 The f5 in the index is just my naming convention to show that this index is based on the First 5 characters
 ```
 
+# Like like search
+Search the database with blind index and filter results to mimic like
+ie: $found = Member::whereStartsWith('email', 'email_index_f4', 'joe@gmail.');
+
+This searches the db for the first 4 characters based on the index, then it filters the results and returns only the records that start with the full search string
+
+Use case:
+I want to search my records for the string 'joe@gmail.com'
+I have created a blind index of 4 characters (see other pr)
+
+When using the whereStartsWith I specify the index to use , full search string and it returns only where the results start with the full string
+
+```
+$found = Member::whereStartsWith('email', 'email_index_f4', 'joe2@gmail.com');
+```
+
+
+
 
 ## Changelog
 
