@@ -58,7 +58,34 @@ When using the whereStartsWith I specify the index to use , full search string a
 $found = Member::whereStartsWith('email', 'email_index_f4', 'joe2@gmail.com');
 ```
 
+# Examples: Search part of an email
 
+Setup:
+I have a member table where there is an index created like this
+```
+    ...
+        ->addBlindIndex('email', new BlindIndex('email_index_f4', [new FirstXCharacters(4)]));
+    ...
+```
+
+Now I can search for the email like
+```
+    $found = Member::whereBlind('email', 'email_index_f4', 'joe1@')->get();
+```
+This will result in all records that start with joe1@
+ie:
+joe1@example.com
+joe1@gmail.com
+joe1@google.com
+
+Searching for a more specific record:
+```
+$found = Member::whereStartsWith('email', 'email_index_f4', 'joe1@gmail.com');
+```
+This will result only in only 1 record
+This is accomplished by a 2 step approach
+First use the generic blind search on the 4 characters,
+Then filter down the result of only the wanted record
 
 
 ## Changelog
