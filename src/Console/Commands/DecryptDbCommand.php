@@ -14,8 +14,7 @@ use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class DecryptDbCommand extends Command
 {
-    //protected $signature = 'db:decrypt {model} {newKey} ';
-    protected $signature = 'db:decrypt {model}  {newKey} {sortDirection=asc}';
+    protected $signature = 'db:decrypt {model} {decryptKey} {sortDirection=asc}';
 
     protected $description = 'Encrypt the values of a model';
 
@@ -78,13 +77,12 @@ class DecryptDbCommand extends Command
                 $modelClass::configureCipherSweet($oldRow);
 
                 $newRow = new EncryptedRow(
-                    new CipherSweetEngine(new StringProvider($this->argument('newKey')), $oldRow->getBackend()),
+                    new CipherSweetEngine(new StringProvider($this->argument('decryptKey')), $oldRow->getBackend()),
                     $newClass->getTable(),
                 );
                 $modelClass::configureCipherSweet($newRow);
 
                 $rotator = new RowRotator($oldRow, $newRow);
-
 
 
                 //if ($rotator->needsReEncrypt($model)) { // how to determine if encrypted
@@ -96,7 +94,15 @@ class DecryptDbCommand extends Command
                     }
 
                     // update database with unencrypted data
-                    $ciphertext = $newRow->decryptRow($model);
+                    try {
+                        $ciphertext = $newRow->decryptRow($model);
+                    } catch (InvalidCiphertextException $e) {
+                        // possibly not encrypted, or not a valid key provided
+                        $message = "Model {$modelClass} cannot be decrypted. \nEither the database is not encrypted, or no valid decryption key provided";
+                        $this->error(PHP_EOL. $message);
+                        die();
+                    }
+
                     DB::table($newClass->getTable())
                         ->where($newClass->getKeyName(), $model[$newClass->getKeyName()])
                         ->update(Arr::only($ciphertext, $newRow->listEncryptedFields()));
