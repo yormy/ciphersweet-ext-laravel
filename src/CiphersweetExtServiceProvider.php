@@ -5,6 +5,7 @@ namespace Yormy\CiphersweetExtLaravel;
 use Illuminate\Support\ServiceProvider;
 use Yormy\CiphersweetExtLaravel\Console\Commands\AnonymizeCommand;
 use Yormy\CiphersweetExtLaravel\Console\Commands\DecryptDbCommand;
+use Yormy\CiphersweetExtLaravel\Console\Commands\DecryptRecordCommand;
 use Yormy\CiphersweetExtLaravel\Console\Commands\EncryptDbCommand;
 use Yormy\CiphersweetExtLaravel\Console\Commands\GenerateEncryptionKeyCommand;
 use Yormy\CiphersweetExtLaravel\ServiceProviders\EventServiceProvider;
@@ -48,7 +49,8 @@ class CiphersweetExtServiceProvider extends ServiceProvider
             $this->commands([
                 EncryptDbCommand::class,
                 GenerateEncryptionKeyCommand::class,
-                DecryptDbCommand::class
+                DecryptDbCommand::class,
+                DecryptRecordCommand::class
             ]);
         }
     }
