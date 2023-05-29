@@ -11,6 +11,12 @@ return [
     |
     | List the models that you want to encrypt
     |
+    | ie:
+    | 'models' => [
+    |     App/Models/User::class,
+    |     App/Models/Invoices::class
+    | ]
+    |
     */
     'models' => [
         Member::class,
