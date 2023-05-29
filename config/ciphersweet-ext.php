@@ -24,10 +24,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Additional models
+    | Encryptable models
     |--------------------------------------------------------------------------
     |
-    | Additional models that are not part of the main app, ie in the vendor section
+    | List the models that you want to encrypt
     |
     */
     'models' => [
