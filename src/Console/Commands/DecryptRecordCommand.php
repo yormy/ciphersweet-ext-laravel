@@ -69,22 +69,29 @@ class DecryptRecordCommand extends Command
      */
     protected function decryptModelValues(string $modelClass): void
     {
-        $table = 'admins';
         $id = 2;
-        DB::table($table)
-            ->where('id', 2)
-            ->orderBy((new $modelClass())
-            ->getKeyName()
-            )
-            ->each(function (object $model) use ($modelClass, $table, &$updatedRows) {
+        $newClass = (new $modelClass());
+
+        $records = DB::table($newClass->getTable())
+            ->where('id',1000)
+            ->orderBy(
+                (new $modelClass())
+                ->getKeyName()
+            );
+
+        if ($records->count() === 0 ) {
+            $this->error(PHP_EOL. 'No records found');
+        }
+
+        $records->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
                 $model = (array)$model;
 
-                $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $table);
-                $modelClass::configureCipherSweet($oldRow);
+                $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
+              //  $modelClass::configureCipherSweet($oldRow);
 
                 $newRow = new EncryptedRow(
                     new CipherSweetEngine(new StringProvider($this->getDecryptionKey()), $oldRow->getBackend()),
-                    $table,
+                    $newClass->getTable(),
                 );
                 $modelClass::configureCipherSweet($newRow);
 
