@@ -99,7 +99,6 @@ class EncryptDbCommand extends Command
         $startTime = microtime(true);
 
         $encryptionKey = $this->option('key');
-        //$encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
 
         try {
             $instance = $this->getClass($model);
@@ -117,65 +116,27 @@ class EncryptDbCommand extends Command
         event(new ModelsEncrypted($model, $instance->count(), $durationInSeconds));
     }
 
-    /**
-     * @psalm-suppress PossiblyInvalidArgument
-     * @psalm-suppress MixedArgument
-     */
-    protected function getModels(string $path): Collection
-    {
-        if (! empty($models = $this->option('model'))) {
-            return collect($models)->filter(fn ($model) => class_exists($model))->values();
-        }
-
-        return collect((new Finder)->in($path)->files()->name('*.php'))
-            ->map(function ($model) {
-                $namespace = $this->laravel->getNamespace();
-
-                return $namespace.str_replace(
-                    ['/', '.php'],
-                    ['\\', ''],
-                    Str::after($model->getRealPath(), realpath(app_path()).DIRECTORY_SEPARATOR)
-                );
-            })->filter(function ($model) {
-                return $this->includeModel($model);
-            })
-            ->filter(function ($model) {
-                return $this->isEncryptable($model);
-            })->filter(function ($model) {
-                return $this->classExists($model);
-            })->values();
-    }
-
-
     private function getAllModels(): Collection
     {
-        $appModels = $this->getModels(app_path(''));
+        $models = config('ciphersweet-ext.models');
 
-        $additionalModels = collect(
-            config('ciphersweet-ext.models')
-        );
+        $allowed = collect();
+        foreach ($models as $model) {
+            if (
+                $this->classExists($model) &&
+                $this->isEncryptable($model)
+            ) {
+                $allowed->add($model);
+            }
+        }
 
-        return $appModels->merge($additionalModels);
+        return $allowed;
     }
 
 
     protected function classExists(string $model)
     {
         return class_exists($model);
-    }
-
-    protected function includeModel(string $model): bool
-    {
-        /**
-         * @var string[] $ignorePaths
-         */
-        $ignorePaths = config('ciphersweet-ext.ignore');
-
-        if (Str::startsWith($model, $ignorePaths)) {
-            return false;
-        }
-
-        return true;
     }
 
 
