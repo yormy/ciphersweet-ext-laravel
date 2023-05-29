@@ -2,7 +2,7 @@
 
 namespace Yormy\CiphersweetExtLaravel\Events;
 
-class ModelsAnonymized
+class ModelsEncrypted
 {
     public function __construct(
         public readonly string $model,

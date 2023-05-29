@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Symfony\Component\Finder\Finder;
 use Yormy\CiphersweetExtLaravel\Actions\AnonymizeWithoutModel;
-use Yormy\CiphersweetExtLaravel\Events\ModelsAnonymized;
+use Yormy\CiphersweetExtLaravel\Events\ModelsEncrypted;
 use Yormy\CiphersweetExtLaravel\Traits\Anonymizable;
 use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
 
@@ -66,35 +66,27 @@ class EncryptDbCommand extends Command
         }
 
 
-        echo "go encyrpt";
-
-
         // hp artisan ciphersweet:encrypt "Mexion\\BedrockUsers\\Models\\Member" 1db641ec8fb33bb5167c117ad289eb27f5745427d60e37ad1f116710759c67
 
-//        $anonymizing = [];
-//
-//        $events->listen(ModelsAnonymized::class, function (ModelsAnonymized $event) use (&$anonymizing) {
-//            /**
-//             * @var string[] $anonymizing
-//             */
-//            if (! in_array($event->model, $anonymizing)) {
-//                $anonymizing[] = $event->model;
-//            }
-//
-//            $this->components->twoColumnDetail($event->model, "{$event->count} records ({$event->durationInSeconds} seconds)");
-//        });
+        $encrypting = [];
+
+        $events->listen(ModelsEncrypted::class, function (ModelsEncrypted $event) use (&$encrypting) {
+            /**
+             * @var string[] $encrypting
+             */
+            if (! in_array($event->model, $encrypting)) {
+                $encrypting[] = $event->model;
+            }
+
+            $this->components->twoColumnDetail($event->model, "{$event->count} records ({$event->durationInSeconds} seconds)");
+        });
 
         /**
          * @psalm-suppress MixedArgument
          */
         $models->each(fn ($model) => $this->encryptModel($model));
 
-        dd();
-
-
-        AnonymizeWithoutModel::exec();
-
-        $events->forget(ModelsAnonymized::class);
+        $events->forget(ModelsEncrypted::class);
 
         $durationInMinutes = round((microtime(true) - $this->startTime)/60, 1);
         $this->components->twoColumnDetail('TOTAL DURATION', "{$durationInMinutes} minutes");
@@ -102,48 +94,29 @@ class EncryptDbCommand extends Command
         return null;
     }
 
-    protected function truncateTables(): void
-    {
-        /**
-         * @var string[] $truncateTables
-         */
-        $truncateTables = config('anonymizer.truncate');
-
-        foreach ($truncateTables as $truncateTable) {
-            DB::table($truncateTable)->truncate();
-            $this->components->twoColumnDetail($truncateTable, 'truncated');
-        }
-    }
 
     protected function encryptModel(string $model): void
     {
-        // hp artisan ciphersweet:encrypt "Mexion\\BedrockUsers\\Models\\Member" 1db641ec8fb33bb5167c117ad289eb27f5745427d60e37ad1f116710759c67
+        $startTime = microtime(true);
 
-        $encryptWith = '1b3195421c884e0b5414e55ead5b25001ad157b9fba137595646a1f781255e22';
+        $encryptWith = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
         $model = $this->convertClass($model);
-        $this->call('ciphersweet:encrypt', [
-            'model' => 'Mexion\\BedrockUsers\\Models\\Member',
-            'newKey' => $encryptWith
-        ]);
-dd('done');
+
         try {
             $instance = $this->getClass($model);
         } catch (\Throwable) {
             return; // if the class cannot be created (ie abstract class) just skip it
         }
 
-        $chunkSize = $this->option('chunk');
 
-        /**
-         * @psalm-suppress MixedMethodCall
-         */
-        $total = $this->isEncryptable($model)
-            ? (int)$instance->anonymizeAll($chunkSize)
-            : 0;
+        $this->callSilent('ciphersweet:encrypt', [
+            'model' => $model,
+            'newKey' => $encryptWith
+        ]);
 
-        if ($total === 0) {
-            $this->components->twoColumnDetail($model, '0 records');
-        }
+        $durationInSeconds = round(microtime(true) - $startTime, 0);
+
+        event(new ModelsEncrypted($model, $instance->count(), $durationInSeconds));
     }
 
     /**
