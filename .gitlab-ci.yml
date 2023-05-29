@@ -1,0 +1,14 @@
+image: lorisleiva/laravel-docker:latest
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - vendor/
+
+phpunit:
+  stage: test
+  script:
+    - rm -Rf ./vendor
+    - composer install
+    - composer psalm
+    - composer phpcs
