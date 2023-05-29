@@ -1,23 +1,38 @@
 <?php
 
+use Mexion\BedrockUsers\Models\Member;
+use Mexion\BedrockUsers\Models\Admin;
+
 return [
     /*
     |--------------------------------------------------------------------------
-    | Allowed Environments
+    | Ignore paths
     |--------------------------------------------------------------------------
     |
-    | The anonymizer is a critical function that destroys data
-    | it should only be allowed to run on test data.
-    | Specify the name of the environment where it is allowed
+    | Paths to ignore searching for models
     | Example:
-    |    'environments' => [
-    |      'local',
-    }      'test',
-    |    ],
+    |   'ignore' => [
+    |       'App\Helpers',
+    |       'App\Services'
+    |   ],
+    |
     */
-    'environments' => [
-        'local',
-        'test',
+    'ignore' => [
+        'App\Helpers',
+        'App\Services',
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Additional models
+    |--------------------------------------------------------------------------
+    |
+    | Additional models that are not part of the main app, ie in the vendor section
+    |
+    */
+    'models' => [
+        Member::class,
+        Admin::class
+    ]
 
 ];

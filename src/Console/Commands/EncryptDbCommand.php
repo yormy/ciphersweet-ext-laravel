@@ -38,11 +38,6 @@ class EncryptDbCommand extends Command
      */
     protected $components;
 
-//    protected function configEnvironments(): array
-//    {
-//        return (array)config('ciphersweet.environments');
-//    }
-
     /**
      * @psalm-suppress MissingReturnType
      */
@@ -50,7 +45,7 @@ class EncryptDbCommand extends Command
     {
         $this->startTime = microtime(true);
 
-        $models = $this->getModels();
+        $models = $this->getAllModels();
 
         if ($models->isEmpty()) {
             $this->components->info('No encryptable models found.');
@@ -102,8 +97,6 @@ class EncryptDbCommand extends Command
         }
         $encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
 
-        $model = $this->convertClass($model);
-
         try {
             $instance = $this->getClass($model);
         } catch (\Throwable) {
@@ -124,15 +117,13 @@ class EncryptDbCommand extends Command
      * @psalm-suppress PossiblyInvalidArgument
      * @psalm-suppress MixedArgument
      */
-    protected function getModels(): Collection
+    protected function getModels(string $path): Collection
     {
         if (! empty($models = $this->option('model'))) {
             return collect($models)->filter(fn ($model) => class_exists($model))->values();
         }
 
-        //return collect((new Finder)->in($this->getDefaultPath())->files()->name('*.php'));
-
-        return collect((new Finder)->in($this->getDefaultPath())->files()->name('*.php'))
+        return collect((new Finder)->in($path)->files()->name('*.php'))
             ->map(function ($model) {
                 $namespace = $this->laravel->getNamespace();
 
@@ -151,47 +142,41 @@ class EncryptDbCommand extends Command
             })->values();
     }
 
-    protected function convertClass(string $model): string
+
+    private function getAllModels(): Collection
     {
-        return str_replace('App\\\\var\www\html\packages\php\bedrock-users\src', 'Mexion\BedrockUsers', $model);
+        $appModels = $this->getModels(app_path(''));
+
+        $additionalModels = collect(
+            config('ciphersweet-ext.models')
+        );
+
+        return $appModels->merge($additionalModels);
     }
+
 
     protected function classExists(string $model)
     {
-        $model = $this->convertClass($model);
-        //dd($model);
-        //$model = "Mexion\BedrockUsers\Models\User";
         return class_exists($model);
-        return true;
-        //;
     }
 
     protected function includeModel(string $model): bool
     {
+        /**
+         * @var string[] $ignorePaths
+         */
+        $ignorePaths = config('anonymizer.ignore');
+
+        if (Str::startsWith($model, $ignorePaths)) {
+            return false;
+        }
+
         return true;
-//        /**
-//         * @var string[] $ignorePaths
-//         */
-//        $ignorePaths = config('anonymizer.ignore');
-//
-//        if (Str::startsWith($model, $ignorePaths)) {
-//            return false;
-//        }
-//
-//        return true;
     }
 
-    protected function getDefaultPath(): string
-    {
-        return "/var/www/html/app/local/site/main/vendor/mexion/bedrock-users/src/Models";
-        return app_path('');
-    }
 
     protected function isEncryptable(string $model): bool
     {
-        //echo "**". $model. PHP_EOL;
-        //return true;
-        $model = $this->convertClass($model);
         $uses = class_uses_recursive($model);
 
         return in_array(UsesCipherSweet::class, $uses);
@@ -199,8 +184,6 @@ class EncryptDbCommand extends Command
 
     protected function pretendToEncrypt(string $model): void
     {
-        $model = $this->convertClass($model);
-
         try {
             $instance = $this->getClass($model);
         } catch (\Throwable) {

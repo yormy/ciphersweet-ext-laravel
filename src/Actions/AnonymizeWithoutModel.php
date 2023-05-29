@@ -2,7 +2,7 @@
 
 namespace Yormy\CiphersweetExtLaravel\Actions;
 
-use Yormy\CiphersweetExtLaravel\Events\ModelsAnonymized;
+use Yormy\CiphersweetExtLaravel\Events\ModelsEncrypted;
 use Yormy\CiphersweetExtLaravel\Services\AnonymizeService;
 use Illuminate\Support\Facades\DB;
 
@@ -34,7 +34,7 @@ class AnonymizeWithoutModel
             }
 
             $durationInSeconds = round(microtime(true) - $startTime, 0);
-            event(new ModelsAnonymized("{$table}", $count, $durationInSeconds));
+            event(new ModelsEncrypted("{$table}", $count, $durationInSeconds));
 
         }
     }
