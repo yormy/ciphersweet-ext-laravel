@@ -22,7 +22,7 @@ class EncryptDbCommand extends Command
 {
     protected $signature = 'db:encrypt
                                 {--model=* : Class names of the models to be anonymized}
-                                {--key : Encryption key}
+                                {--key= : Encryption key}
                                 {--pretend : Display the number of encrypted records found instead of actioning on them}';
 
     protected $description = 'Ecnrypt all models';
@@ -45,7 +45,7 @@ class EncryptDbCommand extends Command
     {
         if (empty($encryptionKey = $this->option('key'))) {
             $this->components->error('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
-            // die();
+            die();
         }
 
         $this->startTime = microtime(true);
@@ -88,6 +88,8 @@ class EncryptDbCommand extends Command
         $durationInMinutes = round((microtime(true) - $this->startTime)/60, 1);
         $this->components->twoColumnDetail('TOTAL DURATION', "{$durationInMinutes} minutes");
 
+        $this->call('cache:clear');
+
         return null;
     }
 
@@ -97,7 +99,7 @@ class EncryptDbCommand extends Command
         $startTime = microtime(true);
 
         $encryptionKey = $this->option('key');
-        $encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
+        //$encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
 
         try {
             $instance = $this->getClass($model);
