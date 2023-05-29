@@ -16,7 +16,7 @@ class DecryptDbCommand extends Command
 {
     protected $signature = 'db:decrypt {model} {decryptKey} {sortDirection=asc}';
 
-    protected $description = 'Encrypt the values of a model';
+    protected $description = 'Decrypt all recods of a model';
 
     public function handle(): int
     {

@@ -14,9 +14,9 @@ use Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted;
 
 class DecryptRecordCommand extends Command
 {
-    protected $signature = 'db:decrypt-record {model} {decryptKey?}';
+    protected $signature = 'db:decrypt-record {model} {id} {decryptKey?}';
 
-    protected $description = 'Encrypt the values of a model';
+    protected $description = 'Decrypt a record';
 
     public function handle(): int
     {
@@ -69,11 +69,15 @@ class DecryptRecordCommand extends Command
      */
     protected function decryptModelValues(string $modelClass): void
     {
-        $id = 2;
+        $id = $this->argument('id');
+        if (!$id ) {
+            $this->error(PHP_EOL. 'No Id specified');
+        }
+
         $newClass = (new $modelClass());
 
         $records = DB::table($newClass->getTable())
-            ->where('id',1000)
+            ->where('id',$id)
             ->orderBy(
                 (new $modelClass())
                 ->getKeyName()
