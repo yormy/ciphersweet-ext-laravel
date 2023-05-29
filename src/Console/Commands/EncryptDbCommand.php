@@ -105,7 +105,7 @@ class EncryptDbCommand extends Command
             return; // if the class cannot be created (ie abstract class) just skip it
         }
 
-        $this->callSilent('ciphersweet:encrypt', [
+        $this->call('ciphersweet:encrypt', [
             'model' => $model,
             'newKey' => $encryptionKey
         ]);
