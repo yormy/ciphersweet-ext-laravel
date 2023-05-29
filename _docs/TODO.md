@@ -7,3 +7,5 @@ idea: env to set ether to use it or not.
 collection of models
 
 # decrypt 1 value ? in console for debugging
+or specify the table and id to get the decrypted value on screen
+or specify the model (more complex thant table) and get on screen
