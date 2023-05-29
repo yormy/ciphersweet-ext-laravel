@@ -4,6 +4,7 @@ namespace Yormy\CiphersweetExtLaravel;
 
 use Illuminate\Support\ServiceProvider;
 use Yormy\CiphersweetExtLaravel\Console\Commands\AnonymizeCommand;
+use Yormy\CiphersweetExtLaravel\Console\Commands\EncryptDbCommand;
 use Yormy\CiphersweetExtLaravel\ServiceProviders\EventServiceProvider;
 
 class CiphersweetExtServiceProvider extends ServiceProvider
@@ -43,7 +44,7 @@ class CiphersweetExtServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->commands([
-                AnonymizeCommand::class,
+                EncryptDbCommand::class,
             ]);
         }
     }
