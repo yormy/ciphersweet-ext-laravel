@@ -22,6 +22,7 @@ class EncryptDbCommand extends Command
 {
     protected $signature = 'db:encrypt
                                 {--model=* : Class names of the models to be anonymized}
+                                {--key : Encryption key}
                                 {--pretend : Display the number of encrypted records found instead of actioning on them}';
 
     protected $description = 'Ecnrypt all models';
@@ -39,7 +40,7 @@ class EncryptDbCommand extends Command
 
 //    protected function configEnvironments(): array
 //    {
-//        return (array)config('anonymizer.environments');
+//        return (array)config('ciphersweet.environments');
 //    }
 
     /**
@@ -65,11 +66,7 @@ class EncryptDbCommand extends Command
             return null;
         }
 
-
-        // hp artisan ciphersweet:encrypt "Mexion\\BedrockUsers\\Models\\Member" 1db641ec8fb33bb5167c117ad289eb27f5745427d60e37ad1f116710759c67
-
         $encrypting = [];
-
         $events->listen(ModelsEncrypted::class, function (ModelsEncrypted $event) use (&$encrypting) {
             /**
              * @var string[] $encrypting
@@ -99,7 +96,12 @@ class EncryptDbCommand extends Command
     {
         $startTime = microtime(true);
 
-        $encryptWith = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
+        if (empty($encryptionKey = $this->option('key'))) {
+            $this->components->info('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
+            // die();
+        }
+        $encryptionKey = '80b095075313bd1419e635574701196c1eff68bd50e3f2f4c82825bca1629f22';
+
         $model = $this->convertClass($model);
 
         try {
@@ -108,10 +110,9 @@ class EncryptDbCommand extends Command
             return; // if the class cannot be created (ie abstract class) just skip it
         }
 
-
         $this->callSilent('ciphersweet:encrypt', [
             'model' => $model,
-            'newKey' => $encryptWith
+            'newKey' => $encryptionKey
         ]);
 
         $durationInSeconds = round(microtime(true) - $startTime, 0);
