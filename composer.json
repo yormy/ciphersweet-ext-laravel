@@ -18,23 +18,21 @@
     ],
     "require": {
         "php": "^8.1",
-        "illuminate/container": "^9.0",
-        "illuminate/contracts": "^9.0",
-        "illuminate/database": "^9.0",
-        "laravel/framework": "^9",
-        "orchestra/testbench": "^7",
+        "illuminate/container": "^9.0|^10|^11",
+        "illuminate/contracts": "^9.0|^10|^11",
+        "illuminate/database": "^9.0|^10|^11",
+        "laravel/framework": "^9|^10|^11",
+        "orchestra/testbench": "^7|^8|^9",
         "spatie/laravel-ciphersweet" : "^1.2.0"
     },
     "require-dev": {
         "jaschilz/php-coverage-badger": "^2.0",
-        "phpmd/phpmd": "^2.12",
-        "phpstan/phpstan": "^1.8",
-        "phpunit/phpunit": "^9.5",
-        "psalm/plugin-laravel": "^2.0",
+        "phpmd/phpmd": "^2.13",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^9.5|^10",
         "squizlabs/php_codesniffer": "^3.7",
-        "thibautselingue/local-php-security-checker-installer": "^1",
-        "vimeo/psalm": "^4.24",
-        "laravel/pint": "^0.2"
+        "laravel/pint": "^1.15",
+        "nunomaduro/phpinsights": "^2.11"
     },
     "autoload": {
         "psr-4": {
@@ -47,18 +45,37 @@
         }
     },
     "scripts": {
+        "---------- STYLE ---------- ": "",
+        "pint": "vendor/bin/pint",
         "cs-fixer" : "phpcbf",
         "md": "vendor/bin/phpmd . html cleancode --reportfile report.html",
         "phpcs": "phpcs --standard=PSR2 -s --exclude=Generic.Files.LineLength --standard=./phpcs.xml --report-file=phpcs-report.txt",
-        "phpstan": "vendor/bin/phpstan analyze src --error-format=raw --level=4",
-        "psalm": "vendor/bin/psalm --no-diff --no-cache --report-show-info=false --report=psalm-report.txt",
-        "psalm-debug": "vendor/bin/psalm --no-cache --debug --debug-by-line",
-        "pint": "vendor/bin/pint",
-        "test": "vendor/bin/phpunit --colors=always --testdox",
+        "---------- FIX ---------- ": "",
+        "insights:fix": "./vendor/bin/testbench insights --fix",
+        "ide-helpers": "./vendor/bin/testbench clear-compiled && ./vendor/bin/testbench ide-helper:generate && ./vendor/bin/testbench ide-helper:models --write && ./vendor/bin/testbench ide-helper:meta",
+        "---------- ANALYSIS ---------- ": "",
+        "insights": "./vendor/bin/testbench insights",
+        "stan": "./vendor/bin/phpstan analyse -c phpstan.conf.neon --memory-limit=2G",
+        "stan:baseline": "./vendor/bin/phpstan  analyse -c phpstan.conf.neon --memory-limit=2G --generate-baseline",
+        "coverage:check" : "composer coverage:clover && php coverage-checker.php clover.xml 50",
+        "coverage:report" : "php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude='~vendor~' ./vendor/bin/phpunit --coverage-html ./meta/coverage ",
+        "coverage:text" : "php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude='~vendor~' ./vendor/bin/phpunit --coverage-text ",
+        "coverage:clover" : "php -dpcov.enabled=1 -dpcov.directory=. -dpcov.exclude='~vendor~' ./vendor/bin/phpunit --coverage-clover coverage/clover.xml",
+        "---------- TEST ---------- ": "",
+        "test": "vendor/bin/phpunit tests/Features tests/Unit --colors=always --testdox",
+        "test:unit": "vendor/bin/paratest --colors=always --testdox --testsuite Unit",
+        "test:feature": "vendor/bin/paratest --colors=always --testdox --testsuite Feature",
         "test-browser": "vendor/bin/phpunit tests/Browser --colors=always --testdox",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
+        "---------- POST ---------- ": "",
         "post-autoload-dump": [
             "@php ./vendor/bin/testbench package:discover --ansi"
+        ],
+        "post-install-cmd": [
+            "composer outdated"
+        ],
+        "post-update-cmd": [
+            "composer outdated"
         ]
     },
     "extra": {
@@ -69,7 +86,10 @@
         }
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true
