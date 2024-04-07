@@ -6,17 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
-use Yormy\CiphersweetExtLaravel\Actions\AnonymizeWithoutModel;
-use Yormy\CiphersweetExtLaravel\Events\ModelsEncrypted;
-use Yormy\CiphersweetExtLaravel\Traits\Anonymizable;
 use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
+use Yormy\CiphersweetExtLaravel\Events\ModelsEncrypted;
 
 /**
  * @psalm-suppress UndefinedThisPropertyFetch
- *
  */
 class EncryptDbCommand extends Command
 {
@@ -45,7 +39,7 @@ class EncryptDbCommand extends Command
     {
         if (empty($encryptionKey = $this->option('key'))) {
             $this->components->error('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
-            die();
+            exit();
         }
 
         $this->startTime = microtime(true);
@@ -63,6 +57,7 @@ class EncryptDbCommand extends Command
              * @psalm-suppress MixedArgument
              */
             $models->each(fn ($model) => $this->pretendToEncrypt($model));
+
             return null;
         }
 
@@ -85,14 +80,13 @@ class EncryptDbCommand extends Command
 
         $events->forget(ModelsEncrypted::class);
 
-        $durationInMinutes = round((microtime(true) - $this->startTime)/60, 1);
+        $durationInMinutes = round((microtime(true) - $this->startTime) / 60, 1);
         $this->components->twoColumnDetail('TOTAL DURATION', "{$durationInMinutes} minutes");
 
         $this->call('cache:clear');
 
         return null;
     }
-
 
     protected function encryptModel(string $model): void
     {
@@ -108,7 +102,7 @@ class EncryptDbCommand extends Command
 
         $this->call('ciphersweet:encrypt', [
             'model' => $model,
-            'newKey' => $encryptionKey
+            'newKey' => $encryptionKey,
         ]);
 
         $durationInSeconds = round(microtime(true) - $startTime, 0);
@@ -133,12 +127,10 @@ class EncryptDbCommand extends Command
         return $allowed;
     }
 
-
     protected function classExists(string $model)
     {
         return class_exists($model);
     }
-
 
     protected function isEncryptable(string $model): bool
     {
@@ -161,7 +153,7 @@ class EncryptDbCommand extends Command
         $count = $instance->count();
 
         if ($count === 0) {
-            $this->components->twoColumnDetail($model, "no action");
+            $this->components->twoColumnDetail($model, 'no action');
         } else {
             $this->components->twoColumnDetail($model, "{$count} records will be encrypted");
         }
@@ -177,5 +169,4 @@ class EncryptDbCommand extends Command
          */
         return new $name();
     }
-
 }

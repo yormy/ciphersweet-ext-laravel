@@ -1,7 +1,7 @@
 <?php
 
-use Mexion\BedrockUsers\Models\Member;
 use Mexion\BedrockUsers\Models\Admin;
+use Mexion\BedrockUsers\Models\Member;
 
 return [
     /*
@@ -20,7 +20,7 @@ return [
     */
     'models' => [
         Member::class,
-        Admin::class
-    ]
+        Admin::class,
+    ],
 
 ];

@@ -1,5 +1,7 @@
 <?php
+
 declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Transformers;
 
 use ParagonIE\CipherSweet\Contract\TransformationInterface;
@@ -7,15 +9,14 @@ use ParagonIE\ConstantTime\Binary;
 
 class FirstXCharacters implements TransformationInterface
 {
-
     public function __construct(private readonly int $characterCount)
-    {}
+    {
+    }
 
     /**
      * Returns the first x characters
      *
-     * @param string $input
-     * @return string
+     * @param  string  $input
      */
     public function __invoke(
         #[\SensitiveParameter]
@@ -25,6 +26,6 @@ class FirstXCharacters implements TransformationInterface
             return $input;
         }
 
-        return substr($input,0, $this->characterCount);
+        return substr($input, 0, $this->characterCount);
     }
 }

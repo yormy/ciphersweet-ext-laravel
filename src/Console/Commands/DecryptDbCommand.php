@@ -54,9 +54,7 @@ class DecryptDbCommand extends Command
     }
 
     /**
-     * @param class-string<\Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted> $modelClass
-     *
-     * @return void
+     * @param  class-string<\Spatie\LaravelCipherSweet\Contracts\CipherSweetEncrypted>  $modelClass
      */
     protected function decryptModelValues(string $modelClass): void
     {
@@ -71,7 +69,7 @@ class DecryptDbCommand extends Command
             ->orderBy((new $modelClass())
                 ->getKeyName(), $sortDirection)
             ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
-                $model = (array)$model;
+                $model = (array) $model;
 
                 $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
                 $modelClass::configureCipherSweet($oldRow);
@@ -83,7 +81,6 @@ class DecryptDbCommand extends Command
                 $modelClass::configureCipherSweet($newRow);
 
                 $rotator = new RowRotator($oldRow, $newRow);
-
 
                 //if ($rotator->needsReEncrypt($model)) { // how to determine if encrypted
                 if (true) {
@@ -99,8 +96,8 @@ class DecryptDbCommand extends Command
                     } catch (InvalidCiphertextException $e) {
                         // possibly not encrypted, or not a valid key provided
                         $message = "Model {$modelClass} cannot be decrypted. \nEither the database is not encrypted, or no valid decryption key provided";
-                        $this->error(PHP_EOL. $message);
-                        die();
+                        $this->error(PHP_EOL.$message);
+                        exit();
                     }
 
                     DB::table($newClass->getTable())
@@ -127,6 +124,6 @@ class DecryptDbCommand extends Command
         $this->getOutput()->progressFinish();
 
         $this->info("Updated {$updatedRows} rows.");
-        $this->info("You can now set your config key to the new key.");
+        $this->info('You can now set your config key to the new key.');
     }
 }

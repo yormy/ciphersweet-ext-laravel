@@ -4,19 +4,9 @@ namespace Yormy\CiphersweetExtLaravel\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Symfony\Component\Finder\Finder;
-use Yormy\CiphersweetExtLaravel\Actions\AnonymizeWithoutModel;
-use Yormy\CiphersweetExtLaravel\Events\ModelsEncrypted;
-use Yormy\CiphersweetExtLaravel\Traits\Anonymizable;
-use Spatie\LaravelCipherSweet\Concerns\UsesCipherSweet;
 
 /**
  * @psalm-suppress UndefinedThisPropertyFetch
- *
  */
 class GenerateEncryptionKeyCommand extends Command
 {
@@ -42,6 +32,4 @@ class GenerateEncryptionKeyCommand extends Command
 
         return null;
     }
-
-
 }
