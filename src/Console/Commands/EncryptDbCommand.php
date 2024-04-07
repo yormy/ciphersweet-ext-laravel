@@ -25,10 +25,10 @@ class EncryptDbCommand extends Command
 
     /**
      * The console components factory.
-     *
+     * @var mixed $components
      * @internal This property is not meant to be used or overwritten outside the framework.
      */
-    protected \Illuminate\Console\View\Components\Factory $components;
+    protected $components;
 
     private float $startTime;
 

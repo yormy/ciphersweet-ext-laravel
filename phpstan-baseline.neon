@@ -1,0 +1,116 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$engine of class ParagonIE\\\\CipherSweet\\\\EncryptedRow constructor expects ParagonIE\\\\CipherSweet\\\\CipherSweet, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$modelClass of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\DecryptDbCommand\\:\\:decryptModelValues\\(\\) expects class\\-string\\<Spatie\\\\LaravelCipherSweet\\\\Contracts\\\\CipherSweetEncrypted\\>, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$rawKey of class ParagonIE\\\\CipherSweet\\\\KeyProvider\\\\StringProvider constructor expects string, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#2 \\$direction of method Illuminate\\\\Database\\\\Query\\\\Builder\\:\\:orderBy\\(\\) expects string, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptDbCommand.php
+
+		-
+			message: "#^If condition is always true\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptRecordCommand.php
+
+		-
+			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\DecryptRecordCommand\\:\\:getDecryptionKey\\(\\) should return string but returns array\\|string\\|true\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptRecordCommand.php
+
+		-
+			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\DecryptRecordCommand\\:\\:getDecryptionKey\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptRecordCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$engine of class ParagonIE\\\\CipherSweet\\\\EncryptedRow constructor expects ParagonIE\\\\CipherSweet\\\\CipherSweet, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptRecordCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$modelClass of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\DecryptRecordCommand\\:\\:decryptModelValues\\(\\) expects class\\-string\\<Spatie\\\\LaravelCipherSweet\\\\Contracts\\\\CipherSweetEncrypted\\>, array\\|bool\\|string\\|null given\\.$#"
+			count: 1
+			path: src/Console/Commands/DecryptRecordCommand.php
+
+		-
+			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Call to an undefined method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:count\\(\\)\\.$#"
+			count: 2
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Cannot call method error\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Cannot call method info\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Cannot call method twoColumnDetail\\(\\) on mixed\\.$#"
+			count: 4
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:classExists\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^PHPDoc type mixed of property Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:\\$components is not covariant with PHPDoc type Illuminate\\\\Console\\\\View\\\\Components\\\\Factory of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$components\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$model of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:classExists\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$model of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:encryptModel\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$model of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:isEncryptable\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Parameter \\#1 \\$model of method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:pretendToEncrypt\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Console/Commands/EncryptDbCommand.php
+
+		-
+			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\GenerateEncryptionKeyCommand\\:\\:handle\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Console/Commands/GenerateEncryptionKeyCommand.php
