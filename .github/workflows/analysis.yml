@@ -1,0 +1,65 @@
+name: Analysis
+
+on: [push]
+
+jobs:
+  phpstan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('composer.lock') }}
+
+      - name: Installing dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.2
+          php_extensions: "json zip sodium pcntl bcmath"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Prepare cache
+        run: "sudo chmod -R 777 vendor/orchestra/testbench-core/laravel/bootstrap/cache"
+
+      - name: stan
+        run: "./vendor/bin/phpstan analyse -c phpstan.conf.neon --memory-limit=2G"
+
+  insights:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('composer.lock') }}
+
+      - name: Installing dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: 8.2
+          php_extensions: "zip"
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: insights
+        run: "sudo ./vendor/bin/testbench insights -v --min-quality=90 --min-complexity=70 --min-architecture=50 --min-style=80  --format=json > ./badges/phpinsights.json"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: phpinsights
+          path: badges/phpinsights.json

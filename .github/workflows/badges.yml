@@ -1,0 +1,53 @@
+name: badge
+
+on:
+  workflow_run:
+    workflows: [analysis, testing]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      actions: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('composer.lock') }}
+
+      - name: Download PhpInsights.json
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: analysis.yml
+          name: phpinsights
+          path: badges
+
+#      - name: Download Clover.xml
+#        uses: dawidd6/action-download-artifact@v2
+#        with:
+#          workflow: testing.yml
+#          name: clover
+#          path: coverage
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: php
+        run: "php badges.php"
+
+      - name: upload
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          file_pattern: '*.svg'
+          commit_message: Badges
