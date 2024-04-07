@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -21,16 +23,14 @@ class EncryptDbCommand extends Command
 
     protected $description = 'Ecnrypt all models';
 
-    private float $startTime;
-
     /**
      * The console components factory.
      *
-     * @var \Illuminate\Console\View\Components\Factory
-     *
      * @internal This property is not meant to be used or overwritten outside the framework.
      */
-    protected $components;
+    protected \Illuminate\Console\View\Components\Factory $components;
+
+    private float $startTime;
 
     /**
      * @psalm-suppress MissingReturnType
@@ -39,7 +39,7 @@ class EncryptDbCommand extends Command
     {
         if (empty($encryptionKey = $this->option('key'))) {
             $this->components->error('No encryption key set use: ciphersweet:generate to generate a key and then specify with --key= ');
-            exit();
+            exit;
         }
 
         $this->startTime = microtime(true);
@@ -62,9 +62,9 @@ class EncryptDbCommand extends Command
         }
 
         $encrypting = [];
-        $events->listen(ModelsEncrypted::class, function (ModelsEncrypted $event) use (&$encrypting) {
+        $events->listen(ModelsEncrypted::class, function (ModelsEncrypted $event) use (&$encrypting): void {
             /**
-             * @var string[] $encrypting
+             * @var array<string> $encrypting
              */
             if (! in_array($event->model, $encrypting)) {
                 $encrypting[] = $event->model;
@@ -110,23 +110,6 @@ class EncryptDbCommand extends Command
         event(new ModelsEncrypted($model, $instance->count(), $durationInSeconds));
     }
 
-    private function getAllModels(): Collection
-    {
-        $models = config('ciphersweet-ext.models');
-
-        $allowed = collect();
-        foreach ($models as $model) {
-            if (
-                $this->classExists($model) &&
-                $this->isEncryptable($model)
-            ) {
-                $allowed->add($model);
-            }
-        }
-
-        return $allowed;
-    }
-
     protected function classExists(string $model)
     {
         return class_exists($model);
@@ -157,6 +140,23 @@ class EncryptDbCommand extends Command
         } else {
             $this->components->twoColumnDetail($model, "{$count} records will be encrypted");
         }
+    }
+
+    private function getAllModels(): Collection
+    {
+        $models = config('ciphersweet-ext.models');
+
+        $allowed = collect();
+        foreach ($models as $model) {
+            if (
+                $this->classExists($model) &&
+                $this->isEncryptable($model)
+            ) {
+                $allowed->add($model);
+            }
+        }
+
+        return $allowed;
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -84,7 +86,7 @@ class DecryptRecordCommand extends Command
             $this->error(PHP_EOL.'No records found');
         }
 
-        $records->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
+        $records->each(function (object $model) use ($modelClass, $newClass): void {
             $model = (array) $model;
 
             $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
@@ -113,11 +115,10 @@ class DecryptRecordCommand extends Command
                     // possibly not encrypted, or not a valid key provided
                     $message = "Model {$modelClass} cannot be decrypted. \nEither the database is not encrypted, or no valid decryption key provided";
                     $this->error(PHP_EOL.$message);
-                    exit();
+                    exit;
                 }
 
                 dump($ciphertext);
-
             }
         });
 

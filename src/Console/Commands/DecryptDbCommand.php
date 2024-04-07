@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -68,7 +70,7 @@ class DecryptDbCommand extends Command
         DB::table($newClass->getTable())
             ->orderBy((new $modelClass())
                 ->getKeyName(), $sortDirection)
-            ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows) {
+            ->each(function (object $model) use ($modelClass, $newClass, &$updatedRows): void {
                 $model = (array) $model;
 
                 $oldRow = new EncryptedRow(app(CipherSweetEngine::class), $newClass->getTable());
@@ -97,7 +99,7 @@ class DecryptDbCommand extends Command
                         // possibly not encrypted, or not a valid key provided
                         $message = "Model {$modelClass} cannot be decrypted. \nEither the database is not encrypted, or no valid decryption key provided";
                         $this->error(PHP_EOL.$message);
-                        exit();
+                        exit;
                     }
 
                     DB::table($newClass->getTable())

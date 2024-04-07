@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -17,11 +19,9 @@ class GenerateEncryptionKeyCommand extends Command
     /**
      * The console components factory.
      *
-     * @var \Illuminate\Console\View\Components\Factory
-     *
      * @internal This property is not meant to be used or overwritten outside the framework.
      */
-    protected $components;
+    protected \Illuminate\Console\View\Components\Factory $components;
 
     /**
      * @psalm-suppress MissingReturnType

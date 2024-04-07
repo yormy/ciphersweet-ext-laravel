@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel;
 
 use Illuminate\Support\ServiceProvider;
@@ -11,12 +13,12 @@ use Yormy\CiphersweetExtLaravel\ServiceProviders\EventServiceProvider;
 
 class CiphersweetExtServiceProvider extends ServiceProvider
 {
-    const CONFIG_FILE = __DIR__.'/../config/ciphersweet-ext.php';
+    public const CONFIG_FILE = __DIR__.'/../config/ciphersweet-ext.php';
 
     /**
      * @psalm-suppress MissingReturnType
      */
-    public function boot()
+    public function boot(): void
     {
         $this->publish();
 
@@ -26,7 +28,7 @@ class CiphersweetExtServiceProvider extends ServiceProvider
     /**
      * @psalm-suppress MixedArgument
      */
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(static::CONFIG_FILE, 'ciphersweet-ext');
 

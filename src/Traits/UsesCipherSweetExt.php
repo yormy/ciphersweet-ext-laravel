@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Yormy\CiphersweetExtLaravel\Traits;
 
 use Illuminate\Contracts\Database\Query\Builder;
@@ -19,10 +21,8 @@ trait UsesCipherSweetExt
         $builder = $this->scopeWhereBlind($query, $column, $indexName, $value);
         $allItems = $builder->get();
 
-        $filteredItems = $allItems->filter(function ($item) use ($value, $column) {
+        return $allItems->filter(function ($item) use ($value, $column) {
             return str_contains($item[$column], $value) !== false;
         })->values();
-
-        return $filteredItems;
     }
 }
