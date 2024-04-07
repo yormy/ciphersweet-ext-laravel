@@ -61,32 +61,12 @@ parameters:
 			path: src/Console/Commands/EncryptDbCommand.php
 
 		-
-			message: "#^Cannot call method error\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Console/Commands/EncryptDbCommand.php
-
-		-
-			message: "#^Cannot call method info\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Console/Commands/EncryptDbCommand.php
-
-		-
-			message: "#^Cannot call method twoColumnDetail\\(\\) on mixed\\.$#"
-			count: 4
-			path: src/Console/Commands/EncryptDbCommand.php
-
-		-
 			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:classExists\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Console/Commands/EncryptDbCommand.php
 
 		-
 			message: "#^Method Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:handle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Console/Commands/EncryptDbCommand.php
-
-		-
-			message: "#^PHPDoc type mixed of property Yormy\\\\CiphersweetExtLaravel\\\\Console\\\\Commands\\\\EncryptDbCommand\\:\\:\\$components is not covariant with PHPDoc type Illuminate\\\\Console\\\\View\\\\Components\\\\Factory of overridden property Illuminate\\\\Console\\\\Command\\:\\:\\$components\\.$#"
 			count: 1
 			path: src/Console/Commands/EncryptDbCommand.php
 

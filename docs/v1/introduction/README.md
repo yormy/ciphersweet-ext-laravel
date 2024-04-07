@@ -79,25 +79,3 @@ This will result only in only 1 record
 This is accomplished by a 2 step approach
 First use the generic blind search on the 4 characters,
 Then filter down the result of only the wanted record
-
-
-## Changelog
-
-Please see [CHANGELOG](../../../CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](.github/CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [Yormy](https://gitlab.com/yormy)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](../../../LICENSE.md) for more information.
