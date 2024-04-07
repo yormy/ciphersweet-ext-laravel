@@ -1,10 +1,3 @@
-# Anonymizer Laravel
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/yormy/ciphersweet-ext-laravel.svg?style=flat-square)](https://packagist.org/packages/yormy/ciphersweet-ext-laravel)
-[![Total Downloads](https://img.shields.io/packagist/dt/yormy/ciphersweet-ext-laravel.svg?style=flat-square)](https://packagist.org/packages/yormy/ciphersweet-ext-laravel)
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/facade/ignition/run-php-tests?label=Tests)
-![Alt text](./coverage.svg)
-
 # Goal
 This package extends the laravel-ciphersweet package with a few cool helpers
 
